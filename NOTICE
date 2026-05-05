@@ -1,0 +1,3 @@
+This package is a Python port of @drupal-api-client/api-client (JavaScript).
+Original source: https://github.com/drupal-api-client/drupal-api-client
+Licensed under the MIT License by the Drupal API Client contributors.

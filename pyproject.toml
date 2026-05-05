@@ -1,0 +1,44 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "drupal-api-client"
+version = "0.2.0"
+description = "Python port of @drupal-api-client/api-client — base HTTP client for Drupal APIs"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "ISC" }
+dependencies = ["httpx>=0.27"]
+authors = [{ name = "Vincenzo Gambino" }]
+keywords = ["drupal", "api", "api-client", "jsonapi", "json-api", "decoupled", "decoupled-drupal", "headless"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: ISC License (ISCL)",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Typing :: Typed",
+]
+
+[project.urls]
+Homepage = "https://github.com/VincenzoGambino/drupal-api-client-python"
+Repository = "https://github.com/VincenzoGambino/drupal-api-client-python"
+Issues = "https://github.com/VincenzoGambino/drupal-api-client-python/issues"
+Changelog = "https://github.com/VincenzoGambino/drupal-api-client-python/blob/main/CHANGELOG.md"
+Source = "https://github.com/drupal-api-client/drupal-api-client"
+
+[project.optional-dependencies]
+dev = ["pytest>=7", "respx>=0.20", "ruff>=0.4", "mypy>=1.10", "build>=1.2", "twine>=5"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/drupal_api_client"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
