@@ -15,7 +15,7 @@ from drupal_api_client import (
 
 
 RESOLVED_BODY: dict = {
-    "resolved": True,
+    "resolved": "https://example.com/about-us",
     "isHomePath": False,
     "entity": {
         "canonical": "https://example.com/node/1",
@@ -34,12 +34,12 @@ RESOLVED_BODY: dict = {
     },
 }
 
+# `details` is a string, matching the real Decoupled Router 404 body (see
+# tests/fixtures/unresolved-article.json). It was previously a dict here,
+# which is what let the wrong `details` annotation survive.
 UNRESOLVED_BODY: dict = {
-    "resolved": False,
     "message": "Unable to resolve path /nonexistent.",
-    "details": {
-        "info": "None of the available routers were able to handle this request.",
-    },
+    "details": "None of the available methods were able to find a match for this path.",
 }
 
 TRANSLATE_URL = "https://example.com/router/translate-path"
@@ -57,7 +57,7 @@ class TestTranslatePathHappyPath:
         with DecoupledRouterClient("https://example.com") as client:
             result = client.translate_path("/about-us")
             assert isinstance(result, ResolvedPath)
-            assert result.resolved is True
+            assert result.resolved == "https://example.com/about-us"
             assert result.is_home_path is False
             assert result.entity["uuid"] == "abc-123"
             assert result.entity["bundle"] == "article"
@@ -76,7 +76,7 @@ class TestTranslatePathRawResponse:
             result = client.translate_path("/about-us", raw_response=True)
             assert isinstance(result, RawDecoupledRouterResponse)
             assert result.response.status_code == 200
-            assert result.json["resolved"] is True
+            assert result.json["resolved"] == "https://example.com/about-us"
             assert result.json["entity"]["uuid"] == "abc-123"
 
 
@@ -101,7 +101,6 @@ class TestTranslatePath404:
         with DecoupledRouterClient("https://example.com") as client:
             result = client.translate_path("/nonexistent")
             assert isinstance(result, UnresolvedPath)
-            assert result.resolved is False
             assert result.message == "Unable to resolve path /nonexistent."
 
     @respx.mock
@@ -237,14 +236,14 @@ class TestCreateCacheKey:
 class TestDiscriminatedUnion:
     def test_resolved_path_construction(self) -> None:
         path = ResolvedPath(
-            resolved=True,
+            resolved="https://example.com/node/1",
             is_home_path=False,
             entity={"uuid": "abc-123", "type": "node"},
             label="Test",
             jsonapi=None,
             meta=None,
         )
-        assert path.resolved is True
+        assert path.resolved == "https://example.com/node/1"
         assert path.entity["uuid"] == "abc-123"
 
     @respx.mock
@@ -255,12 +254,11 @@ class TestDiscriminatedUnion:
         with DecoupledRouterClient("https://example.com") as client:
             result = client.translate_path("/nonexistent")
             assert isinstance(result, UnresolvedPath)
-            assert result.resolved is False
             assert result.message is not None
 
     def test_match_case_dispatch(self) -> None:
         resolved: ResolvedPath | UnresolvedPath = ResolvedPath(
-            resolved=True,
+            resolved="https://example.com/node/1",
             is_home_path=False,
             entity={"uuid": "abc-123"},
             label="Test",
@@ -268,7 +266,6 @@ class TestDiscriminatedUnion:
             meta=None,
         )
         unresolved: ResolvedPath | UnresolvedPath = UnresolvedPath(
-            resolved=False,
             message="Not found",
             details=None,
         )

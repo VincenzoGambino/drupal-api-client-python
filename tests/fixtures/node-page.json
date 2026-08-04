@@ -1,0 +1,110 @@
+{
+  "jsonapi": {
+    "version": "1.0",
+    "meta": {
+      "links": {
+        "self": {
+          "href": "http://jsonapi.org/format/1.0/"
+        }
+      }
+    }
+  },
+  "data": [
+    {
+      "type": "node--page",
+      "id": "ee7cf535-acb0-42d5-acda-2902cbddbf0e",
+      "links": {
+        "self": {
+          "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/ee7cf535-acb0-42d5-acda-2902cbddbf0e?resourceVersion=id%3A38"
+        }
+      },
+      "attributes": {
+        "drupal_internal__nid": 19,
+        "drupal_internal__vid": 38,
+        "langcode": "en",
+        "revision_timestamp": "2023-02-17T22:14:01+00:00",
+        "revision_log": null,
+        "status": true,
+        "title": "About Umami",
+        "created": "2023-02-17T22:14:01+00:00",
+        "changed": "2023-02-17T22:14:01+00:00",
+        "promote": false,
+        "sticky": false,
+        "default_langcode": true,
+        "revision_translation_affected": null,
+        "moderation_state": "published",
+        "path": {
+          "alias": "/about-umami",
+          "pid": 103,
+          "langcode": "en"
+        },
+        "content_translation_source": "und",
+        "content_translation_outdated": false,
+        "body": {
+          "value": "<p>Umami is a fictional food magazine that has been created to demonstrate how you might build a Drupal site using functionality provided 'out of the box'.</p><p>For more information visit <a href='https://www.drupal.org/docs/umami-drupal-demonstration-installation-profile'>https://www.drupal.org/docs/umami-drupal-demonstration-installation-profile</a>.</p>",
+          "format": "basic_html",
+          "processed": "<p>Umami is a fictional food magazine that has been created to demonstrate how you might build a Drupal site using functionality provided 'out of the box'.</p>\n<p>For more information visit <a href=\"https://www.drupal.org/docs/umami-drupal-demonstration-installation-profile\">https://www.drupal.org/docs/umami-drupal-demonstration-installation-profile</a>.</p>\n",
+          "summary": null
+        }
+      },
+      "relationships": {
+        "node_type": {
+          "data": {
+            "type": "node_type--node_type",
+            "id": "af3cb94b-d823-470e-96af-1a666aef2501",
+            "meta": {
+              "drupal_internal__target_id": "page"
+            }
+          },
+          "links": {
+            "related": {
+              "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/ee7cf535-acb0-42d5-acda-2902cbddbf0e/node_type?resourceVersion=id%3A38"
+            },
+            "self": {
+              "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/ee7cf535-acb0-42d5-acda-2902cbddbf0e/relationships/node_type?resourceVersion=id%3A38"
+            }
+          }
+        },
+        "revision_uid": {
+          "data": {
+            "type": "user--user",
+            "id": "51b43cf1-6d1e-4f75-b14d-dbb11d935590",
+            "meta": {
+              "drupal_internal__target_id": 7
+            }
+          },
+          "links": {
+            "related": {
+              "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/ee7cf535-acb0-42d5-acda-2902cbddbf0e/revision_uid?resourceVersion=id%3A38"
+            },
+            "self": {
+              "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/ee7cf535-acb0-42d5-acda-2902cbddbf0e/relationships/revision_uid?resourceVersion=id%3A38"
+            }
+          }
+        },
+        "uid": {
+          "data": {
+            "type": "user--user",
+            "id": "51b43cf1-6d1e-4f75-b14d-dbb11d935590",
+            "meta": {
+              "drupal_internal__target_id": 7
+            }
+          },
+          "links": {
+            "related": {
+              "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/ee7cf535-acb0-42d5-acda-2902cbddbf0e/uid?resourceVersion=id%3A38"
+            },
+            "self": {
+              "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/ee7cf535-acb0-42d5-acda-2902cbddbf0e/relationships/uid?resourceVersion=id%3A38"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "links": {
+    "self": {
+      "href": "https://dev-drupal-api-client-poc.pantheonsite.io/jsonapi/node/page"
+    }
+  }
+}

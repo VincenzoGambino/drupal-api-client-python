@@ -1,0 +1,24 @@
+{
+  "resolved": "https://dev-drupal-api-client-poc.pantheonsite.io/en/recipes/deep-mediterranean-quiche",
+  "isHomePath": false,
+  "entity": {
+    "canonical": "https://dev-drupal-api-client-poc.pantheonsite.io/en/recipes/deep-mediterranean-quiche",
+    "type": "node",
+    "bundle": "recipe",
+    "id": "1",
+    "uuid": "35f7cd32-2c54-49f2-8740-0b0ec2ba61f6"
+  },
+  "label": "Deep mediterranean quiche",
+  "jsonapi": {
+    "individual": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6",
+    "resourceName": "node--recipe",
+    "pathPrefix": "jsonapi",
+    "basePath": "/jsonapi",
+    "entryPoint": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi"
+  },
+  "meta": {
+    "deprecated": {
+      "jsonapi.pathPrefix": "This property has been deprecated and will be removed in the next version of Decoupled Router. Use basePath instead."
+    }
+  }
+}

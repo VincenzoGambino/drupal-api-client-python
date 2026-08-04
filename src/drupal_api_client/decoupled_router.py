@@ -21,7 +21,10 @@ logger = logging.getLogger(__name__)
 class ResolvedPath:
     """Resolved entity info from Drupal's Decoupled Router."""
 
-    resolved: bool
+    # Despite the name, this is the canonical resolved URL, not a
+    # boolean flag - matches the real Decoupled Router API response and
+    # the JS client's `ResolvedPath.resolved: string`.
+    resolved: str
     is_home_path: bool
     entity: dict[str, Any]
     label: str | None
@@ -33,9 +36,11 @@ class ResolvedPath:
 class UnresolvedPath:
     """Unresolved path response from Drupal's Decoupled Router."""
 
-    resolved: bool
     message: str | None
-    details: dict[str, Any] | None
+    # A human-readable explanation string, not a mapping - this matches
+    # both the real Decoupled Router 404 body and the JS client's
+    # `UnResolvedPath.details: string`.
+    details: str | None
 
 
 DecoupledRouterResponse = ResolvedPath | UnresolvedPath
@@ -57,7 +62,7 @@ def _parse_response(json_data: dict[str, Any]) -> DecoupledRouterResponse:
     """
     if "entity" in json_data:
         return ResolvedPath(
-            resolved=json_data.get("resolved", True),
+            resolved=json_data.get("resolved", ""),
             # camelCase mapping: isHomePath → is_home_path
             is_home_path=json_data.get("isHomePath", False),
             entity=json_data["entity"],
@@ -66,7 +71,6 @@ def _parse_response(json_data: dict[str, Any]) -> DecoupledRouterResponse:
             meta=json_data.get("meta"),
         )
     return UnresolvedPath(
-        resolved=json_data.get("resolved", False),
         message=json_data.get("message"),
         details=json_data.get("details"),
     )

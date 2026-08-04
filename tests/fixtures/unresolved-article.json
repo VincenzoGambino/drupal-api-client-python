@@ -1,0 +1,4 @@
+{
+  "message": "Unable to resolve path /articles/unresolved-path.",
+  "details": "None of the available methods were able to find a match for this path."
+}

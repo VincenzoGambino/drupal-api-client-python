@@ -1,0 +1,12 @@
+{
+  "data": {
+    "type": "node--page",
+    "attributes": {
+      "title": "My custom title",
+      "body": {
+        "value": "Custom value",
+        "format": "plain_text"
+      }
+    }
+  }
+}

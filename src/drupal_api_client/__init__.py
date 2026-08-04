@@ -1,5 +1,9 @@
 """drupal-api-client — base HTTP client for Drupal APIs."""
 
+from drupal_api_client.async_client import AsyncApiClient
+from drupal_api_client.async_decoupled_router import AsyncDecoupledRouterClient
+from drupal_api_client.async_graphql import AsyncGraphqlClient
+from drupal_api_client.async_jsonapi import AsyncJsonApiClient
 from drupal_api_client.auth import (
     Authentication,
     BasicAuth,
@@ -22,11 +26,22 @@ from drupal_api_client.errors import (
     DrupalApiClientError,
     ResourceNotFoundError,
 )
+from drupal_api_client.graphql import GraphqlClient
 from drupal_api_client.jsonapi import JsonApiClient, RawJsonApiResponse
-from drupal_api_client.serializer import PassthroughSerializer, Serializer
+from drupal_api_client.serializer import (
+    DefaultSerializer,
+    PassthroughSerializer,
+    Resource,
+    ResourceCollection,
+    Serializer,
+)
 
 __all__ = [
     "ApiClient",
+    "AsyncApiClient",
+    "AsyncDecoupledRouterClient",
+    "AsyncGraphqlClient",
+    "AsyncJsonApiClient",
     "Authentication",
     "AuthenticationError",
     "BasicAuth",
@@ -35,7 +50,9 @@ __all__ = [
     "CustomAuth",
     "DecoupledRouterClient",
     "DecoupledRouterResponse",
+    "DefaultSerializer",
     "DrupalApiClientError",
+    "GraphqlClient",
     "InMemoryCache",
     "JsonApiClient",
     "OAuthAuth",
@@ -43,8 +60,10 @@ __all__ = [
     "PassthroughSerializer",
     "RawDecoupledRouterResponse",
     "RawJsonApiResponse",
-    "ResourceNotFoundError",
     "ResolvedPath",
+    "Resource",
+    "ResourceCollection",
+    "ResourceNotFoundError",
     "Serializer",
     "UnresolvedPath",
 ]

@@ -1,0 +1,24 @@
+{
+  "resolved": "https://drupal-contributions.lndo.site/es/articles/prueba-y-cultiva-tus-propias-hierbas",
+  "isHomePath": false,
+  "entity": {
+    "canonical": "https://drupal-contributions.lndo.site/es/articles/prueba-y-cultiva-tus-propias-hierbas",
+    "type": "node",
+    "bundle": "article",
+    "id": "11",
+    "uuid": "3b733346-2052-4567-b608-21e56eb0cca5"
+  },
+  "label": "Prueba y cultiva tus propias hierbas",
+  "jsonapi": {
+    "individual": "https://drupal-contributions.lndo.site/es/jsonapi/node/article/3b733346-2052-4567-b608-21e56eb0cca5",
+    "resourceName": "node--article",
+    "pathPrefix": "jsonapi",
+    "basePath": "/jsonapi",
+    "entryPoint": "https://drupal-contributions.lndo.site/es/jsonapi"
+  },
+  "meta": {
+    "deprecated": {
+      "jsonapi.pathPrefix": "This property has been deprecated and will be removed in the next version of Decoupled Router. Use basePath instead."
+    }
+  }
+}

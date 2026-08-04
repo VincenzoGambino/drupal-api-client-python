@@ -1,0 +1,32 @@
+{
+  "data": {
+    "nodeArticles": {
+      "nodes": [
+        {
+          "title": "Give it a go and grow your own herbs"
+        },
+        {
+          "title": "Dairy-free and delicious milk chocolate"
+        },
+        {
+          "title": "The real deal for supermarket savvy shopping"
+        },
+        {
+          "title": "The Umami guide to our favorite mushrooms"
+        },
+        {
+          "title": "Let's hear it for carrots"
+        },
+        {
+          "title": "Baking mishaps - our troubleshooting tips"
+        },
+        {
+          "title": "Skip the spirits with delicious mocktails"
+        },
+        {
+          "title": "Give your oatmeal the ultimate makeover"
+        }
+      ]
+    }
+  }
+}
