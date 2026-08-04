@@ -13,3 +13,8 @@ build/
 .env
 .venv/
 venv/
+
+# Internal parity audit against the JS client. Kept local: it documents the
+# local ddev test environment, including throwaway OAuth/basic-auth
+# credentials that have no business in a public repo.
+JS_VS_PYTHON_COMPARISON.md

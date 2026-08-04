@@ -120,16 +120,29 @@ every version listed in this file now corresponds to an actual release.
 
 ### Changed
 
-- `JS_VS_PYTHON_COMPARISON.md`: added §4.8–§4.16, documenting nine differences
-  from the JS client that had never been recorded (the `fetch` result/error
-  seam, `get_view`'s signature, `Cache.delete`, the write-method option
-  surface, no cache write on `raw_response`, the JSON:API index bypassing the
-  injected cache, `dict`-only request bodies, the `Serializer` protocol
-  requiring both methods, and 204 parsing to `{}`). Two of those — the index
-  cache and the write-method `cache_key` — are fixed in this release rather
-  than merely documented. Rewrote §6, which described the DDEV integration
-  target as a bare Drupal install; it is provisioned and the live suite
-  passes against it.
+- A line-by-line audit against the JS client turned up several behavioural
+  differences that had never been documented. Two were bugs and are fixed
+  above. Two more are fixed in this release (the JSON:API index cache and
+  `cache_key` on writes). The remainder are **deliberate** and are called out
+  here so they are not mistaken for oversights:
+
+  - `fetch` lets `httpx.HTTPError` propagate; the JS client returns a
+    `{response, error}` result and never throws on transport failure.
+    Exceptions are the Python idiom, and a result tuple would fight `httpx`.
+  - `get_view(view_id, display_id)` takes two arguments where JS packs them
+    into one `"view--display"` string. URLs and cache keys are identical.
+  - The `Cache` protocol requires `delete` (JS is `get`/`set` only) — this is
+    what makes invalidation-on-write possible.
+  - Write methods accept `query_string` (JS's do not) and omit
+    `disable_cache`, which is meaningless here: JS uses it to suppress the
+    post-write cache write, and this client invalidates instead.
+  - `raw_response=True` performs no cache write; JS caches the body anyway.
+  - Request bodies must be a `dict`; JS also accepts a pre-serialized string.
+  - The `Serializer` protocol requires both `deserialize` and `serialize`;
+    JS declares both optional. `DefaultSerializer.serialize` raises
+    `NotImplementedError`.
+  - A 204 response parses to `{}` rather than JS's `""`. Only observable via
+    `raw_response=True` on a delete, since the normal path returns `None`.
 
 ### Notes
 

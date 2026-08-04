@@ -74,7 +74,8 @@ class TestRouterClassification:
         self, fixture
     ) -> None:
         # Guards the parity trap: `resolved` is the canonical URL string,
-        # not a boolean (see JS_VS_PYTHON_COMPARISON.md).
+        # not a boolean (see the 0.3.0 "Fixed (breaking)" notes in
+        # CHANGELOG.md).
         body = fixture("resolved-recipe.json")
         respx.get(f"{BASE_URL}/router/translate-path").mock(
             return_value=httpx.Response(200, json=body)
