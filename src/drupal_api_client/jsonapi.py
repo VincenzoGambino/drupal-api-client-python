@@ -174,7 +174,7 @@ class JsonApiClient(ApiClient):
         api_prefix = self.api_prefix or "jsonapi"
         segments = [api_prefix, entity_type_id, bundle_id]
         if locale_segment:
-            segments = [locale_segment] + segments
+            segments = [locale_segment, *segments]
         if resource_id:
             segments.append(resource_id)
         path = "/".join(segments)
@@ -579,7 +579,7 @@ class JsonApiClient(ApiClient):
         api_prefix = self.api_prefix or "jsonapi"
         segments = [api_prefix, "views", view_id, display_id]
         if locale_segment:
-            segments = [locale_segment] + segments
+            segments = [locale_segment, *segments]
         path = "/".join(segments)
         url = urljoin(self.base_url, path)
 

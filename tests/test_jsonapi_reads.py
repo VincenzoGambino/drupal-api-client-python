@@ -1,6 +1,7 @@
 """Tests for JsonApiClient read operations (step 3b)."""
 
 import copy
+from typing import ClassVar
 from unittest.mock import MagicMock
 
 import httpx
@@ -611,7 +612,7 @@ class TestIndexLookupPerLocale:
     ES_CUSTOM_COLLECTION_URL = (
         "https://example.com/es/custom-endpoint/node/article"
     )
-    ES_INDEX_BODY: dict = {
+    ES_INDEX_BODY: ClassVar[dict] = {
         "jsonapi": {"version": "1.0", "meta": {}},
         "data": [],
         "meta": {},
