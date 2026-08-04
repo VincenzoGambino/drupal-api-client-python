@@ -755,7 +755,7 @@ class JsonApiClient(ApiClient):
         disable_authentication: bool = False,
         cache_key: str | None = None,
         raise_for_status: bool = True,
-    ) -> None | RawJsonApiResponse:
+    ) -> RawJsonApiResponse | None:
         """Delete a resource.
 
         Invalidates the cached canonical resource entry AND the cached

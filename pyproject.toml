@@ -34,20 +34,26 @@ Changelog = "https://github.com/VincenzoGambino/drupal-api-client-python/blob/ma
 Source = "https://github.com/drupal-api-client/drupal-api-client"
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "pytest-asyncio>=0.23", "respx>=0.20", "ruff>=0.4", "mypy>=1.10", "build>=1.2", "twine>=5"]
+dev = ["pytest>=7", "pytest-asyncio>=0.23", "respx>=0.20", "ruff==0.15.12", "mypy>=1.10", "build>=1.2", "twine>=5"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/drupal_api_client"]
 
 [tool.ruff]
-# Pinned explicitly: `ruff check` with no config uses the installed ruff's
-# *default* rule set, which changes between releases. CI installs `ruff>=0.4`
-# (i.e. the newest), so an unconfigured run can start failing on a rule that
-# simply graduated into the defaults - which is exactly how RUF022 broke a
-# green local run. Selecting rules here makes local and CI agree.
+# Selecting rules explicitly is necessary but NOT sufficient to make local and
+# CI agree: which rules a `select` expands to is a property of the ruff binary,
+# so a floating `ruff>=x` means a floating gate. Two CI failures came from
+# exactly this (RUF022 graduating into the defaults, then RUF036/RUF031
+# graduating out of preview). The version is therefore pinned in
+# [project.optional-dependencies].dev. Bump it deliberately, not incidentally.
 target-version = "py310"
 
 [tool.ruff.lint]
+# `preview` is safe to enable *because* the ruff version is pinned in
+# [project.optional-dependencies].dev: the rule set is frozen, and satisfying
+# preview rules now means a future ruff upgrade graduating them is a no-op
+# rather than a broken build.
+preview = true
 select = ["E4", "E7", "E9", "F", "RUF"]
 
 [tool.pytest.ini_options]

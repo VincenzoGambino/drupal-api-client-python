@@ -124,7 +124,7 @@ class DefaultSerializer:
             shell["id"] = raw.get("id")
             for attr_name, attr_value in (raw.get("attributes") or {}).items():
                 shell[attr_name] = attr_value
-            registry[(raw.get("type"), raw.get("id"))] = (shell, raw)
+            registry[raw.get("type"), raw.get("id")] = (shell, raw)
 
         for shell, raw in registry.values():
             for rel_name, rel in (raw.get("relationships") or {}).items():
@@ -135,12 +135,12 @@ class DefaultSerializer:
         # Assemble the top-level return value.
         if isinstance(data, list):
             result: Any = ResourceCollection(
-                registry[(r.get("type"), r.get("id"))][0]
+                registry[r.get("type"), r.get("id")][0]
                 for r in data
                 if isinstance(r, dict)
             )
         elif isinstance(data, dict):
-            result = registry[(data.get("type"), data.get("id"))][0]
+            result = registry[data.get("type"), data.get("id")][0]
         else:
             # e.g. `data: null` — nothing to flatten.
             return data

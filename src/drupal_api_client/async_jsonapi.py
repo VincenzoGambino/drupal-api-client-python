@@ -438,7 +438,7 @@ class AsyncJsonApiClient(AsyncApiClient, JsonApiClient):
         disable_authentication: bool = False,
         cache_key: str | None = None,
         raise_for_status: bool = True,
-    ) -> None | RawJsonApiResponse:
+    ) -> RawJsonApiResponse | None:
         """Delete a resource (async)."""
         entity_type_id, bundle_id = self._get_entity_type_and_bundle(resource_type)
         locale_segment = locale or self.default_locale
