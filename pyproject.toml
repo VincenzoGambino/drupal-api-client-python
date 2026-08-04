@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "drupal-api-client"
-version = "0.2.0"
+version = "0.3.0"
 description = "Python port of @drupal-api-client/api-client — base HTTP client for Drupal APIs"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -34,7 +34,7 @@ Changelog = "https://github.com/VincenzoGambino/drupal-api-client-python/blob/ma
 Source = "https://github.com/drupal-api-client/drupal-api-client"
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "respx>=0.20", "ruff>=0.4", "mypy>=1.10", "build>=1.2", "twine>=5"]
+dev = ["pytest>=7", "pytest-asyncio>=0.23", "respx>=0.20", "ruff>=0.4", "mypy>=1.10", "build>=1.2", "twine>=5"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/drupal_api_client"]
@@ -42,3 +42,7 @@ packages = ["src/drupal_api_client"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["src"]
+asyncio_mode = "auto"
+markers = [
+    "live: requires a running Drupal site (see tests/test_live_integration.py); skipped unless DRUPAL_API_CLIENT_LIVE_BASE_URL is set",
+]

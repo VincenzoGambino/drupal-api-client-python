@@ -1,0 +1,193 @@
+{
+  "jsonapi": {
+    "version": "1.0",
+    "meta": {
+      "links": {
+        "self": {
+          "href": "http://jsonapi.org/format/1.0/"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "node--recipe",
+    "id": "35f7cd32-2c54-49f2-8740-0b0ec2ba61f6",
+    "links": {
+      "self": {
+        "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6?resourceVersion=id%3A2"
+      }
+    },
+    "attributes": {
+      "drupal_internal__nid": 1,
+      "drupal_internal__vid": 2,
+      "langcode": "es",
+      "revision_timestamp": "2023-02-17T22:14:01+00:00",
+      "revision_log": null,
+      "status": true,
+      "title": "Quiche mediterráneo profundo",
+      "created": "2023-02-17T22:14:01+00:00",
+      "changed": "2023-02-17T22:14:01+00:00",
+      "promote": true,
+      "sticky": false,
+      "default_langcode": false,
+      "revision_translation_affected": true,
+      "moderation_state": "published",
+      "path": {
+        "alias": "/recipes/quiche-mediterráneo-profundo",
+        "pid": 68,
+        "langcode": "es"
+      },
+      "content_translation_source": "und",
+      "content_translation_outdated": false,
+      "field_cooking_time": 30,
+      "field_difficulty": "medium",
+      "field_ingredients": [
+        "Para la masa:",
+        "280g harina normal",
+        "140g mantequilla",
+        "Agua fría",
+        "Para el relleno:",
+        "1 cebolla",
+        "2 dientes ajo",
+        "Medio calabación",
+        "450ml leche de soja",
+        "500g queso parmesano",
+        "2 huevos",
+        "200g tomate deshidratado",
+        "100g queso feta"
+      ],
+      "field_number_of_servings": 8,
+      "field_preparation_time": 40,
+      "field_recipe_instruction": {
+        "value": "<ol>\n  <li>Precaliente el horno a 200°C. Empezando por la pastelería; Frote la harina y la mantequilla en un tazón hasta que se desmoronen como migas de pan. Agregue el agua, poco a poco, hasta que forme una masa.</li>\n  <li>Extiende la masa sobre una tabla enharinada y extiende suavemente sobre tu molde. Coloque en la nevera durante 20 minutos antes de hornear a ciegas durante otros 10.</li>\n  <li>Mientras la masa se está enfriando, corte y cocine suavemente las cebollas, el ajo y el calabacín.</li>\n  <li>En un tazón grande, agregue la leche de soya, la mitad del queso parmesano y los huevos. Mezclar suavemente.</li>\n  <li>Una vez que la masa esté cocida, esparza las cebollas, el ajo y los tomates secos sobre la base y vierta la mezcla de los huevos. Espolvoree el queso parmesano restante y coloque cuidadosamente el feta sobre la parte superior. Hornear durante 30 minutos o hasta que estén doradas.</li>\n</ol>\n",
+        "format": "basic_html",
+        "processed": "<ol><li>Precaliente el horno a 200°C. Empezando por la pastelería; Frote la harina y la mantequilla en un tazón hasta que se desmoronen como migas de pan. Agregue el agua, poco a poco, hasta que forme una masa.</li>\n<li>Extiende la masa sobre una tabla enharinada y extiende suavemente sobre tu molde. Coloque en la nevera durante 20 minutos antes de hornear a ciegas durante otros 10.</li>\n<li>Mientras la masa se está enfriando, corte y cocine suavemente las cebollas, el ajo y el calabacín.</li>\n<li>En un tazón grande, agregue la leche de soya, la mitad del queso parmesano y los huevos. Mezclar suavemente.</li>\n<li>Una vez que la masa esté cocida, esparza las cebollas, el ajo y los tomates secos sobre la base y vierta la mezcla de los huevos. Espolvoree el queso parmesano restante y coloque cuidadosamente el feta sobre la parte superior. Hornear durante 30 minutos o hasta que estén doradas.</li>\n</ol>"
+      },
+      "field_summary": {
+        "value": "Un quiche de inspiración italiana con tomates secos y calabacín. Una comida ligera perfecta para un día de verano.",
+        "format": "basic_html",
+        "processed": "<p>Un quiche de inspiración italiana con tomates secos y calabacín. Una comida ligera perfecta para un día de verano.</p>\n"
+      }
+    },
+    "relationships": {
+      "node_type": {
+        "data": {
+          "type": "node_type--node_type",
+          "id": "1600401a-f138-4a14-9a97-562955e60a88",
+          "meta": {
+            "drupal_internal__target_id": "recipe"
+          }
+        },
+        "links": {
+          "related": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/node_type?resourceVersion=id%3A2"
+          },
+          "self": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/relationships/node_type?resourceVersion=id%3A2"
+          }
+        }
+      },
+      "revision_uid": {
+        "data": {
+          "type": "user--user",
+          "id": "7a9bcded-9c54-4c38-8ba6-2d9bcd5c07ca",
+          "meta": {
+            "drupal_internal__target_id": 4
+          }
+        },
+        "links": {
+          "related": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/revision_uid?resourceVersion=id%3A2"
+          },
+          "self": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/relationships/revision_uid?resourceVersion=id%3A2"
+          }
+        }
+      },
+      "uid": {
+        "data": {
+          "type": "user--user",
+          "id": "7a9bcded-9c54-4c38-8ba6-2d9bcd5c07ca",
+          "meta": {
+            "drupal_internal__target_id": 4
+          }
+        },
+        "links": {
+          "related": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/uid?resourceVersion=id%3A2"
+          },
+          "self": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/relationships/uid?resourceVersion=id%3A2"
+          }
+        }
+      },
+      "field_media_image": {
+        "data": {
+          "type": "media--image",
+          "id": "5d1a96c8-12bc-4975-88c0-9afad93a4235",
+          "meta": {
+            "drupal_internal__target_id": 1
+          }
+        },
+        "links": {
+          "related": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/field_media_image?resourceVersion=id%3A2"
+          },
+          "self": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/relationships/field_media_image?resourceVersion=id%3A2"
+          }
+        }
+      },
+      "field_recipe_category": {
+        "data": [
+          {
+            "type": "taxonomy_term--recipe_category",
+            "id": "983f864b-3e7e-4c99-8b8a-c283d3a66d8a",
+            "meta": {
+              "drupal_internal__target_id": 31
+            }
+          }
+        ],
+        "links": {
+          "related": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/field_recipe_category?resourceVersion=id%3A2"
+          },
+          "self": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/relationships/field_recipe_category?resourceVersion=id%3A2"
+          }
+        }
+      },
+      "field_tags": {
+        "data": [
+          {
+            "type": "taxonomy_term--tags",
+            "id": "182644fd-931e-479f-bb17-07fb190ad777",
+            "meta": {
+              "drupal_internal__target_id": 22
+            }
+          },
+          {
+            "type": "taxonomy_term--tags",
+            "id": "e47a1dda-9a7d-4ee4-b3e3-5e22af3d883e",
+            "meta": {
+              "drupal_internal__target_id": 13
+            }
+          }
+        ],
+        "links": {
+          "related": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/field_tags?resourceVersion=id%3A2"
+          },
+          "self": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6/relationships/field_tags?resourceVersion=id%3A2"
+          }
+        }
+      }
+    }
+  },
+  "links": {
+    "self": {
+      "href": "https://dev-drupal-api-client-poc.pantheonsite.io/es/jsonapi/node/recipe/35f7cd32-2c54-49f2-8740-0b0ec2ba61f6"
+    }
+  }
+}

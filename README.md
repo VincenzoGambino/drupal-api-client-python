@@ -23,6 +23,22 @@ For building query strings, install the companion package:
 pip install drupal-jsonapi-params
 ```
 
+### Local development
+
+Install this checkout in editable mode **from the repository root** so that
+`import drupal_api_client` resolves to the code you're editing:
+
+```bash
+pip install -e .
+```
+
+> Heads-up: if you have more than one checkout of this project, an earlier
+> `pip install -e` from a different directory will shadow this one — `import
+> drupal_api_client` then loads the other copy even though `pytest` (which uses
+> `pythonpath = ["src"]`) still runs against this tree. Re-run `pip install -e .`
+> from the directory you intend to work in. Check with
+> `python -c "import drupal_api_client, os; print(os.path.dirname(drupal_api_client.__file__))"`.
+
 ## Quick start
 
 ### Reading a collection
@@ -139,11 +155,83 @@ with DecoupledRouterClient("https://example.com") as router:
             print(f"Not found: {msg}")
 ```
 
-## What's not in v0.2.0
+## Testing against a live Drupal site
 
-- **GraphQL client** — coming in v0.3.0.
-- **Async support** — sync only for now. Use `asyncio.to_thread()` to call from async code.
-- **Built-in JSON:API document parser** — responses are returned as parsed dicts. Use [`jsonapi-client`](https://pypi.org/project/jsonapi-client/) or write your own parser if you need flattened resources with resolved relationships.
+The default test suite (`pytest`) mocks HTTP via `respx` and needs no
+running Drupal instance. A separate, opt-in module,
+`tests/test_live_integration.py`, runs the same kinds of operations
+against a real site instead — useful for catching cases where a mocked
+fixture has drifted from what the real API actually returns:
+
+```bash
+DRUPAL_API_CLIENT_LIVE_BASE_URL=https://your-site.ddev.site pytest -m live
+```
+
+It's skipped automatically when the env var isn't set. It was developed
+against a [ddev](https://ddev.com/)-hosted Drupal 11 site running the
+Umami demo profile's content, with the `jsonapi` core module and the
+`decoupled_router` contrib module enabled.
+
+The live suite covers reads, path resolution, per-locale index lookup, the
+`DefaultSerializer` (including relationship inlining), and the async clients.
+**Write** tests (create/update/delete) additionally need credentials for a
+user with article CRUD + editorial-transition permissions:
+
+```bash
+DRUPAL_API_CLIENT_LIVE_BASE_URL=https://your-site.ddev.site \
+DRUPAL_API_CLIENT_LIVE_USERNAME=apitest \
+DRUPAL_API_CLIENT_LIVE_PASSWORD=your-password \
+    pytest -m live
+```
+
+They're skipped if the credential vars are absent. See the module docstring
+in `tests/test_live_integration.py` for the exact `drush` commands to
+provision such a user on a ddev Umami site.
+
+## GraphQL
+
+```python
+from drupal_api_client import GraphqlClient
+
+with GraphqlClient("https://drupal.example.com") as client:
+    result = client.query("query { nodeArticles(first: 10) { nodes { title } } }")
+```
+
+## Async
+
+Every client has an async counterpart on `httpx.AsyncClient`
+(`AsyncApiClient`, `AsyncJsonApiClient`, `AsyncDecoupledRouterClient`,
+`AsyncGraphqlClient`), used via `async with`:
+
+```python
+from drupal_api_client import AsyncJsonApiClient
+
+async with AsyncJsonApiClient("https://drupal.example.com") as client:
+    recipes = await client.get_collection("node--recipe")
+    recipe = await client.get_resource_by_path("/recipes/my-recipe")
+```
+
+## Deserializing responses
+
+By default responses are returned as parsed JSON:API dicts. Pass
+`DefaultSerializer` to flatten resources (hoist attributes, inline
+relationships from `included`) and expose `get_meta()`/`get_links()`:
+
+```python
+from drupal_api_client import DefaultSerializer, JsonApiClient
+
+with JsonApiClient("https://drupal.example.com", serializer=DefaultSerializer()) as client:
+    article = client.get_resource("node--article", "<uuid>")
+    print(article["title"])          # attributes hoisted, no `attributes` wrapper
+    print(article.get_meta())        # document-level meta
+```
+
+## Not yet included
+
+- **`serialize()` direction** — `DefaultSerializer` deserializes only; build
+  JSON:API request bodies directly.
+- A structured, per-instance injectable logger object (Python uses stdlib
+  `logging`; see below).
 
 ## Logging
 

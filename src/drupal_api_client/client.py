@@ -53,10 +53,20 @@ class ApiClient:
             self._http_client = http_client
             self._owns_client = False
         else:
-            self._http_client = httpx.Client(timeout=timeout)
+            self._http_client = self._make_http_client(timeout)
             self._owns_client = True
 
         self._oauth_token_response: OAuthTokenResponse | None = None
+
+    def _make_http_client(
+        self, timeout: float | httpx.Timeout
+    ) -> httpx.Client:
+        """Create the HTTP client used when none is injected.
+
+        Overridden by :class:`AsyncApiClient` to return an
+        ``httpx.AsyncClient`` instead.
+        """
+        return httpx.Client(timeout=timeout)
 
     # -- context manager ------------------------------------------------
 

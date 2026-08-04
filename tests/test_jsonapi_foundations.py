@@ -61,13 +61,35 @@ class TestConstructor:
         ) as client:
             assert client.router.serializer is serializer
 
+    def test_http_client_forwarded_to_router(self) -> None:
+        custom = httpx.Client()
+        try:
+            with JsonApiClient(
+                "https://example.com", http_client=custom
+            ) as client:
+                assert client.router._http_client is custom
+        finally:
+            custom.close()
+
+    def test_http_client_injected_not_owned_by_router(self) -> None:
+        custom = httpx.Client()
+        client = JsonApiClient("https://example.com", http_client=custom)
+        try:
+            assert client.router._owns_client is False
+            client.close()
+            # Neither JsonApiClient nor its router owns the injected
+            # client, so closing must not close it.
+            assert not custom.is_closed
+        finally:
+            custom.close()
+
     def test_index_lookup_defaults_false(self) -> None:
         with JsonApiClient("https://example.com") as client:
             assert client.index_lookup is False
 
-    def test_index_cache_starts_none(self) -> None:
+    def test_index_cache_starts_empty(self) -> None:
         with JsonApiClient("https://example.com") as client:
-            assert client._index_cache is None
+            assert client._index_cache == {}
 
     def test_close_closes_both_clients(self) -> None:
         client = JsonApiClient("https://example.com")

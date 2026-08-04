@@ -7,6 +7,136 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.0] - 2026-08-04
+
+Supersedes the `0.3.0` and `0.4.0` entries that previously appeared here: both
+described work that was written but never committed, tagged, or published. PyPI
+went straight from 0.2.0 to this release, so their contents are merged below and
+every version listed in this file now corresponds to an actual release.
+
+### Added
+
+- **GraphQL client** (`GraphqlClient`) — POSTs a query to the `graphql`
+  endpoint and returns the parsed body. Byte-identical `{"query": ...}`
+  envelope to the JS client, plus an optional `variables=` (superset).
+- **Deserializing serializer** (`DefaultSerializer`) — a schema-less,
+  zero-dependency JSON:API flattener: hoists attributes, inlines
+  relationships from `included` (to-many, nulls, unresolved-linkage
+  fallback, circular references), and exposes `get_meta()`/`get_links()`
+  via `Resource`/`ResourceCollection`. Closes the parity gap with the JS
+  `DefaultSerializer` (which uses `jsona`).
+- **Async clients** — `AsyncApiClient`, `AsyncJsonApiClient`,
+  `AsyncDecoupledRouterClient`, `AsyncGraphqlClient` on `httpx.AsyncClient`,
+  used via `async with`. Reuse the sync pure helpers (URL/cache-key building,
+  serializer, response processing) and override only I/O paths.
+- **`cache_key` on write methods** — `create_resource()`, `update_resource()`
+  and `delete_resource()` now accept `cache_key=`, invalidated *in addition
+  to* the canonical collection/resource keys. Without it, a caller who read
+  under a custom cache key had no way to invalidate that entry on write, so it
+  stayed stale indefinitely. The JS client accepts `cacheKey` on all three.
+- **Shared golden test fixtures** — the JS client's fixture JSON is copied
+  verbatim into `tests/fixtures/` and loaded via `conftest.py`, so both
+  clients are exercised against byte-identical payloads.
+- **Cross-language cache-key golden test** (`test_cache_key_golden.py`) —
+  pins the query-string SHA-256 hex to literals verified equal under Node
+  `crypto` and Python `hashlib`.
+- **Examples** (`examples/`) — runnable `get_collection`,
+  `get_resource_by_path`, `authenticated_and_cached`, `async_reads`, and
+  `graphql_query` scripts.
+- **Live OAuth coverage** (`TestLiveOAuth`) — exercises the
+  `client_credentials` grant against a real Simple OAuth 6.x install:
+  token-response shape, `Bearer` header, token reuse across requests, and a
+  full create → update → delete lifecycle authenticated purely by OAuth.
+  This matters because `_get_access_token` subscripts `access_token`,
+  `expires_in` and `token_type` without a guard — a server naming them
+  differently would `KeyError` in production while every mocked test stayed
+  green. Gated on `DRUPAL_API_CLIENT_LIVE_CLIENT_ID` /
+  `DRUPAL_API_CLIENT_LIVE_CLIENT_SECRET`; see the module docstring for the
+  full ddev setup. Note that Simple OAuth 6.x **removed the `password`
+  grant**, so that path remains mock-only against a 6.x target.
+- `tests/test_live_integration.py` — an opt-in test module that runs the
+  same operations against a real Drupal site instead of mocked HTTP.
+  Skipped by default; enable with
+  `DRUPAL_API_CLIENT_LIVE_BASE_URL=<url> pytest -m live`. Developed
+  against `drupal-headless` (ddev) running the Umami demo content with
+  `jsonapi` + `decoupled_router` enabled.
+
+### Fixed (breaking)
+
+- `ResolvedPath.resolved` was typed `bool` but the real Decoupled Router
+  API — and the JS client's own `ResolvedPath.resolved: string` — returns
+  the **canonical resolved URL as a string**, not a boolean. Every
+  existing test was masked by a synthetic `"resolved": True` fixture that
+  didn't match reality; caught by testing against a live Drupal site.
+  `ResolvedPath.resolved` is now typed `str`.
+- `UnresolvedPath.resolved` (a synthetic field with no real-API
+  equivalent — the actual 404 response body has no `resolved` key at
+  all) has been removed, matching the JS client's `UnResolvedPath` shape
+  (`message`, `details` only). Use `isinstance(result, UnresolvedPath)`
+  instead of checking `.resolved`.
+- `UnresolvedPath.details` is typed `str | None`, not
+  `dict[str, Any] | None`. Drupal's Decoupled Router returns a human-readable
+  explanation string, and the JS client types it `string`. The wrong
+  annotation survived because the hand-written test body used a dict while the
+  real fixture (`tests/fixtures/unresolved-article.json`) is a string; both
+  hand-written bodies have been corrected to match the fixture.
+
+### Fixed
+
+- **`get_resource_by_path` now reads the router's `jsonapi.resourceName`**
+  instead of composing the resource type from the entity's `type` and
+  `bundle`. `jsonapi_extras` can rename a resource — e.g. expose
+  `node--article` as `content--story` — and the composed type ignored the
+  rename, requesting the un-rewritten path and 404ing. This matches the JS
+  client, which reads `routingData.jsonapi.resourceName`. Falls back to
+  `{type}--{bundle}` when a router omits `resourceName`. Applies to both the
+  sync and async clients.
+- **The JSON:API index is now stored in the injected cache**, under the same
+  key the JS client uses (`{locale/}{api_prefix}`, e.g. `jsonapi` or
+  `es/jsonapi`). It previously lived only in a private per-instance dict, so
+  it could never be invalidated and was refetched once per client instance
+  even when a shared or persistent cache was supplied. The private memo is
+  retained for clients with no injected cache, so the index is still fetched
+  only once in that case.
+- `JsonApiClient` no longer silently ignores an injected `http_client` for
+  the internal `DecoupledRouterClient` (`self.router`). Previously, a
+  custom/mocked `httpx.Client` passed to `JsonApiClient(...)` was only
+  used for direct JSON:API requests; `get_resource_by_path()` — which
+  delegates to `self.router.translate_path()` — would silently fall back
+  to a separate, default-configured `httpx.Client`, ignoring any custom
+  timeout, proxy, TLS config, or test mock transport. `self.router` now
+  shares the same `http_client` instance as the rest of `JsonApiClient`.
+- `JsonApiClient.create_resource()`, `update_resource()`, and
+  `delete_resource()` now honor `index_lookup=True` even when no prior
+  read (`get_collection`/`get_resource`) has warmed the index cache.
+  Previously, only the read methods called `_fetch_index()`; the write
+  methods relied on `create_url()`, which only *uses* the cached index if
+  already populated and never fetches it. A write issued as the first
+  operation on a fresh client with `index_lookup=True` silently fell back
+  to the standard `{prefix}/{entity}/{bundle}` URL instead of the
+  endpoint advertised by the JSON:API index — a divergence from the JS
+  client, where index-fetching is embedded in `createURL()` itself and
+  applies uniformly to every method that builds a URL.
+
+### Changed
+
+- `JS_VS_PYTHON_COMPARISON.md`: added §4.8–§4.16, documenting nine differences
+  from the JS client that had never been recorded (the `fetch` result/error
+  seam, `get_view`'s signature, `Cache.delete`, the write-method option
+  surface, no cache write on `raw_response`, the JSON:API index bypassing the
+  injected cache, `dict`-only request bodies, the `Serializer` protocol
+  requiring both methods, and 204 parsing to `{}`). Two of those — the index
+  cache and the write-method `cache_key` — are fixed in this release rather
+  than merely documented. Rewrote §6, which described the DDEV integration
+  target as a bare Drupal install; it is provisioned and the live suite
+  passes against it.
+
+### Notes
+
+- Decoupled Router `translate_path` URL-encodes the `path` query parameter
+  (JS interpolates it raw). Cache keys are unaffected (they use the raw
+  path, matching JS); only the request URL differs.
+
 ## [0.2.0] - 2026-05-05
 
 ### Added

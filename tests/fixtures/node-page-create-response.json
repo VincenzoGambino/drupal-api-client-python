@@ -1,0 +1,107 @@
+{
+  "jsonapi": {
+    "version": "1.0",
+    "meta": {
+      "links": {
+        "self": {
+          "href": "http://jsonapi.org/format/1.0/"
+        }
+      }
+    }
+  },
+  "data": {
+    "type": "node--page",
+    "id": "095618f5-7d9b-4003-a6b2-94a047418b1f",
+    "links": {
+      "self": {
+        "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/095618f5-7d9b-4003-a6b2-94a047418b1f?resourceVersion=id%3A17"
+      }
+    },
+    "attributes": {
+      "drupal_internal__nid": 8,
+      "drupal_internal__vid": 17,
+      "langcode": "en",
+      "revision_timestamp": "2024-01-18T17:56:06+00:00",
+      "revision_log": null,
+      "status": true,
+      "title": "My custom title",
+      "created": "2024-01-18T17:56:06+00:00",
+      "changed": "2024-01-18T17:56:06+00:00",
+      "promote": false,
+      "sticky": false,
+      "default_langcode": true,
+      "revision_translation_affected": true,
+      "path": {
+        "alias": null,
+        "pid": null,
+        "langcode": "en"
+      },
+      "content_translation_source": "und",
+      "content_translation_outdated": false,
+      "body": {
+        "value": "Custom value",
+        "format": "plain_text",
+        "processed": "<p>Custom value</p>\n",
+        "summary": null
+      }
+    },
+    "relationships": {
+      "node_type": {
+        "data": {
+          "type": "node_type--node_type",
+          "id": "ed166cf0-807a-466c-9b19-72e52807434f",
+          "meta": {
+            "drupal_internal__target_id": "page"
+          }
+        },
+        "links": {
+          "related": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/095618f5-7d9b-4003-a6b2-94a047418b1f/node_type?resourceVersion=id%3A17"
+          },
+          "self": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/095618f5-7d9b-4003-a6b2-94a047418b1f/relationships/node_type?resourceVersion=id%3A17"
+          }
+        }
+      },
+      "revision_uid": {
+        "data": {
+          "type": "user--user",
+          "id": "6d867414-10ee-41ab-baf7-1feb9c316862",
+          "meta": {
+            "drupal_internal__target_id": 1
+          }
+        },
+        "links": {
+          "related": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/095618f5-7d9b-4003-a6b2-94a047418b1f/revision_uid?resourceVersion=id%3A17"
+          },
+          "self": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/095618f5-7d9b-4003-a6b2-94a047418b1f/relationships/revision_uid?resourceVersion=id%3A17"
+          }
+        }
+      },
+      "uid": {
+        "data": {
+          "type": "user--user",
+          "id": "6d867414-10ee-41ab-baf7-1feb9c316862",
+          "meta": {
+            "drupal_internal__target_id": 1
+          }
+        },
+        "links": {
+          "related": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/095618f5-7d9b-4003-a6b2-94a047418b1f/uid?resourceVersion=id%3A17"
+          },
+          "self": {
+            "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page/095618f5-7d9b-4003-a6b2-94a047418b1f/relationships/uid?resourceVersion=id%3A17"
+          }
+        }
+      }
+    }
+  },
+  "links": {
+    "self": {
+      "href": "https://dev-drupal-api-client-poc.pantheonsite.io/en/jsonapi/node/page"
+    }
+  }
+}

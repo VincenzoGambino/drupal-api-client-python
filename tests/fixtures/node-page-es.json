@@ -1,0 +1,110 @@
+{
+  "jsonapi": {
+    "version": "1.0",
+    "meta": {
+      "links": {
+        "self": {
+          "href": "http://jsonapi.org/format/1.0/"
+        }
+      }
+    }
+  },
+  "data": [
+    {
+      "type": "node--page",
+      "id": "f3526241-6d30-4a27-bc63-af1b6d07c219",
+      "links": {
+        "self": {
+          "href": "https://umami-api-client-demo.ddev.site/es/jsonapi/node/page/f3526241-6d30-4a27-bc63-af1b6d07c219?resourceVersion=id%3A38"
+        }
+      },
+      "attributes": {
+        "drupal_internal__nid": 19,
+        "drupal_internal__vid": 38,
+        "langcode": "es",
+        "revision_timestamp": "2023-09-16T18:38:15+00:00",
+        "revision_log": null,
+        "status": true,
+        "title": "Acerca de Umami",
+        "created": "2023-09-16T18:38:15+00:00",
+        "changed": "2023-09-16T18:38:15+00:00",
+        "promote": false,
+        "sticky": false,
+        "default_langcode": false,
+        "revision_translation_affected": true,
+        "moderation_state": "published",
+        "path": {
+          "alias": "/acerca-de-umami",
+          "pid": 104,
+          "langcode": "es"
+        },
+        "content_translation_source": "und",
+        "content_translation_outdated": false,
+        "body": {
+          "value": "<p> Umami es una revista ficticia de alimentos que se ha creado para demostrar cómo se puede construir un sitio de Drupal con la funcionalidad que se proporciona 'fuera de la caja'. </p> <p> Para obtener más información, visite <a href='https://www.drupal.org/docs/umami-drupal-demonstration-installation-profile'>https://www.drupal.org/docs/umami-drupal-demonstration-installation-profile</a>.</p> ",
+          "format": "basic_html",
+          "processed": "<p> Umami es una revista ficticia de alimentos que se ha creado para demostrar cómo se puede construir un sitio de Drupal con la funcionalidad que se proporciona 'fuera de la caja'. </p>\n<p> Para obtener más información, visite <a href=\"https://www.drupal.org/docs/umami-drupal-demonstration-installation-profile\">https://www.drupal.org/docs/umami-drupal-demonstration-installation-profile</a>.</p>\n",
+          "summary": null
+        }
+      },
+      "relationships": {
+        "node_type": {
+          "data": {
+            "type": "node_type--node_type",
+            "id": "2f667892-a78f-433e-8e35-ee3863fc14f5",
+            "meta": {
+              "drupal_internal__target_id": "page"
+            }
+          },
+          "links": {
+            "related": {
+              "href": "https://umami-api-client-demo.ddev.site/es/jsonapi/node/page/f3526241-6d30-4a27-bc63-af1b6d07c219/node_type?resourceVersion=id%3A38"
+            },
+            "self": {
+              "href": "https://umami-api-client-demo.ddev.site/es/jsonapi/node/page/f3526241-6d30-4a27-bc63-af1b6d07c219/relationships/node_type?resourceVersion=id%3A38"
+            }
+          }
+        },
+        "revision_uid": {
+          "data": {
+            "type": "user--user",
+            "id": "fb5d838c-554a-4b6b-8785-c61605b4f9c1",
+            "meta": {
+              "drupal_internal__target_id": 7
+            }
+          },
+          "links": {
+            "related": {
+              "href": "https://umami-api-client-demo.ddev.site/es/jsonapi/node/page/f3526241-6d30-4a27-bc63-af1b6d07c219/revision_uid?resourceVersion=id%3A38"
+            },
+            "self": {
+              "href": "https://umami-api-client-demo.ddev.site/es/jsonapi/node/page/f3526241-6d30-4a27-bc63-af1b6d07c219/relationships/revision_uid?resourceVersion=id%3A38"
+            }
+          }
+        },
+        "uid": {
+          "data": {
+            "type": "user--user",
+            "id": "fb5d838c-554a-4b6b-8785-c61605b4f9c1",
+            "meta": {
+              "drupal_internal__target_id": 7
+            }
+          },
+          "links": {
+            "related": {
+              "href": "https://umami-api-client-demo.ddev.site/es/jsonapi/node/page/f3526241-6d30-4a27-bc63-af1b6d07c219/uid?resourceVersion=id%3A38"
+            },
+            "self": {
+              "href": "https://umami-api-client-demo.ddev.site/es/jsonapi/node/page/f3526241-6d30-4a27-bc63-af1b6d07c219/relationships/uid?resourceVersion=id%3A38"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "links": {
+    "self": {
+      "href": "https://umami-api-client-demo.ddev.site/jsonapi/node/page"
+    }
+  }
+}
