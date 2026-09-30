@@ -103,6 +103,17 @@ class AsyncApiClient(ApiClient):
             content=content,
         )
 
+        if self._should_retry_with_new_token(response, disable_authentication):
+            logger.debug("Got 401 for %s. Fetching a new OAuth token and retrying.", url)
+            self._oauth_token_response = None
+            response = await self._http_client.request(
+                method,
+                url,
+                headers=await self.add_authorization_header(headers),
+                json=json,
+                content=content,
+            )
+
         if raise_for_status:
             response.raise_for_status()
 
@@ -127,13 +138,7 @@ class AsyncApiClient(ApiClient):
 
             case OAuthAuth() as oauth:
                 token = self._oauth_token_response
-                now = time.time()
-                if (
-                    token is None
-                    or not token.access_token
-                    or not token.token_type
-                    or token.valid_until - 10 < now
-                ):
+                if token is None or not self._is_oauth_token_fresh(token, oauth):
                     logger.debug(
                         "OAuth token is missing or expired. Fetching a new one."
                     )
@@ -149,30 +154,7 @@ class AsyncApiClient(ApiClient):
         self, credentials: OAuthAuth
     ) -> OAuthTokenResponse:
         """Fetch an OAuth token from ``{base_url}oauth/token`` (async)."""
-        if not credentials.client_id or not credentials.client_secret:
-            raise AuthenticationError(
-                "client_id or client_secret is missing on the authentication option."
-            )
-
-        if credentials.grant_type == "password":
-            if not credentials.username or not credentials.password:
-                raise AuthenticationError(
-                    "username or password is missing on the authentication option."
-                )
-            token_body = {
-                "grant_type": "password",
-                "client_id": credentials.client_id,
-                "client_secret": credentials.client_secret,
-                "username": credentials.username,
-                "password": credentials.password,
-            }
-        else:
-            token_body = {
-                "grant_type": "client_credentials",
-                "client_id": credentials.client_id,
-                "client_secret": credentials.client_secret,
-            }
-
+        token_body = self._build_token_request_body(credentials)
         api_url = f"{self.base_url}oauth/token"
         response = await self._http_client.post(
             api_url,

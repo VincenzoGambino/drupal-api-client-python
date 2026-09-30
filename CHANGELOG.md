@@ -7,6 +7,40 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.3.1] - 2026-09-30
+
+### Added
+
+- **`OAuthAuth(scope=...)`**: optional, defaults to `None`. When set, it
+  is sent as the `scope` field of the `oauth/token` request. When `None` the
+  token request body is exactly what it was in 0.3.0, with no `scope` field.
+  Simple OAuth 6.1.x on Drupal 11 grants `client_credentials` tokens only
+  the consumer's scopes and refuses a request that names none, so callers
+  need a way to ask for one explicitly.
+- **`OAuthAuth(token_refresh_margin=...)`**: defaults to `60.0` seconds. A
+  cached token is replaced once less than this margin remains before it
+  expires.
+- **One retry on 401 with a fresh token.** When an OAuth-authenticated
+  request gets a 401, the client discards the cached token, fetches a new
+  one and retries the request once. If the retry also gets a 401, it is
+  handled as before: raised as `httpx.HTTPStatusError` when
+  `raise_for_status` is set, returned otherwise. Requests made with
+  `disable_authentication=True`, and clients using `BasicAuth` or
+  `CustomAuth`, are never retried.
+
+### Changed
+
+- The token refresh margin is now 60 seconds by default, where it used to be
+  a fixed 10 seconds. Tokens are replaced earlier, so a request is less
+  likely to leave with a token that expires on its way to the server.
+
+All three changes apply to the sync and async clients alike, because they
+live in `ApiClient` / `AsyncApiClient`. They are Python-only supersets of the
+JS client, which still uses a fixed 10-second margin, has no retry and sends
+no scope. `AuthenticationError` behaves as before: refused or missing
+credentials still raise it, including when the token fetch for a 401 retry is
+refused.
+
 ## [0.3.0] - 2026-08-04
 
 Supersedes the `0.3.0` and `0.4.0` entries that previously appeared here: both

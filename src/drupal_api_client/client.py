@@ -120,6 +120,17 @@ class ApiClient:
             content=content,
         )
 
+        if self._should_retry_with_new_token(response, disable_authentication):
+            logger.debug("Got 401 for %s. Fetching a new OAuth token and retrying.", url)
+            self._oauth_token_response = None
+            response = self._http_client.request(
+                method,
+                url,
+                headers=self.add_authorization_header(headers),
+                json=json,
+                content=content,
+            )
+
         if raise_for_status:
             response.raise_for_status()
 
@@ -149,14 +160,7 @@ class ApiClient:
 
             case OAuthAuth() as oauth:
                 token = self._oauth_token_response
-                now = time.time()
-
-                if (
-                    token is None
-                    or not token.access_token
-                    or not token.token_type
-                    or token.valid_until - 10 < now
-                ):
+                if token is None or not self._is_oauth_token_fresh(token, oauth):
                     logger.debug(
                         "OAuth token is missing or expired. Fetching a new one."
                     )
@@ -188,11 +192,38 @@ class ApiClient:
 
     # -- protected / internal -------------------------------------------
 
-    def _get_access_token(self, credentials: OAuthAuth) -> OAuthTokenResponse:
-        """Fetch an OAuth token from ``{base_url}oauth/token``.
+    @staticmethod
+    def _is_oauth_token_fresh(
+        token: OAuthTokenResponse, credentials: OAuthAuth
+    ) -> bool:
+        """Whether *token* can be sent as-is rather than replaced first."""
+        return (
+            bool(token.access_token)
+            and bool(token.token_type)
+            and token.valid_until - credentials.token_refresh_margin >= time.time()
+        )
 
-        This method bypasses :meth:`add_authorization_header` to avoid
-        infinite recursion.
+    def _should_retry_with_new_token(
+        self, response: httpx.Response, disable_authentication: bool
+    ) -> bool:
+        """Whether a response is a 401 that a fresh OAuth token might fix.
+
+        The cached token can be revoked or expire server-side before its
+        ``expires_in`` says it should, so a 401 earns one retry with a new
+        token. The caller retries once only; a second 401 is returned as-is.
+        """
+        return (
+            response.status_code == 401
+            and not disable_authentication
+            and isinstance(self.authentication, OAuthAuth)
+        )
+
+    @staticmethod
+    def _build_token_request_body(credentials: OAuthAuth) -> dict[str, str]:
+        """Build the form body for the ``oauth/token`` request.
+
+        Raises :class:`AuthenticationError` when required credentials are
+        missing.
         """
         if not credentials.client_id or not credentials.client_secret:
             raise AuthenticationError(
@@ -220,6 +251,21 @@ class ApiClient:
                 "client_secret": credentials.client_secret,
             }
 
+        # Simple OAuth 6.1.x refuses a client_credentials request that names
+        # no scope, so callers need a way to send one; None keeps the
+        # pre-0.3.1 body byte-for-byte.
+        if credentials.scope is not None:
+            token_body["scope"] = credentials.scope
+
+        return token_body
+
+    def _get_access_token(self, credentials: OAuthAuth) -> OAuthTokenResponse:
+        """Fetch an OAuth token from ``{base_url}oauth/token``.
+
+        This method bypasses :meth:`add_authorization_header` to avoid
+        infinite recursion.
+        """
+        token_body = self._build_token_request_body(credentials)
         api_url = f"{self.base_url}oauth/token"
 
         response = self._http_client.post(
