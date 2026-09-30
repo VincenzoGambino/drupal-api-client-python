@@ -120,10 +120,20 @@ BasicAuth(username="admin", password="secret")
 OAuthAuth(client_id="...", client_secret="...")
 OAuthAuth(client_id="...", client_secret="...", grant_type="password",
           username="...", password="...")
+# Optional: request a scope, and refresh earlier than the 60s default margin
+OAuthAuth(client_id="...", client_secret="...", scope="content_editor",
+          token_refresh_margin=120.0)
 
 # Custom (passed verbatim into the Authorization header)
 CustomAuth(value="Bearer my-token-here")
 ```
+
+With `OAuthAuth`, the token is cached and replaced once less than
+`token_refresh_margin` seconds (default 60) remain. If a request still gets a
+401, the client discards the cached token, fetches a new one and retries once;
+a second 401 is handled like any other error response. Set `scope` when the
+server requires one. Simple OAuth 6.1.x on Drupal 11 refuses a
+`client_credentials` token request that names no scope.
 
 ## Caching
 

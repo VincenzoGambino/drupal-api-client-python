@@ -8,6 +8,7 @@ per-test markers.
 from __future__ import annotations
 
 import json as json_module
+from urllib.parse import parse_qs
 
 import httpx
 import pytest
@@ -21,6 +22,7 @@ from drupal_api_client import (
     BasicAuth,
     DefaultSerializer,
     InMemoryCache,
+    OAuthAuth,
     RawJsonApiResponse,
     Resource,
     ResolvedPath,
@@ -216,6 +218,87 @@ class TestAsyncJsonApiPathAndWrites:
         await client.aclose()
         assert inner.is_closed
         assert router_inner.is_closed
+
+
+# -- AsyncJsonApiClient OAuth (0.3.1) --------------------------------------
+
+
+def _token_response(access_token: str, expires_in: int = 3600) -> httpx.Response:
+    return httpx.Response(
+        200,
+        json={
+            "access_token": access_token,
+            "expires_in": expires_in,
+            "token_type": "Bearer",
+        },
+    )
+
+
+class TestAsyncJsonApiOAuth:
+    @pytest.mark.parametrize(
+        ("margin_kwargs", "expires_in"),
+        [({}, 30), ({"token_refresh_margin": 300.0}, 120)],
+    )
+    @respx.mock
+    async def test_token_refreshed_when_less_than_margin_remains(
+        self, margin_kwargs: dict[str, float], expires_in: int
+    ) -> None:
+        token_route = respx.post(f"{BASE_URL}/oauth/token").mock(
+            return_value=_token_response("tok", expires_in=expires_in)
+        )
+        respx.get(f"{BASE_URL}/jsonapi/node/article").mock(
+            return_value=httpx.Response(200, json={"data": []})
+        )
+        auth = OAuthAuth(client_id="id", client_secret="secret", **margin_kwargs)
+        async with AsyncJsonApiClient(BASE_URL, authentication=auth) as client:
+            await client.get_collection("node--article")
+            await client.get_collection("node--article")
+        assert token_route.call_count == 2
+
+    @respx.mock
+    async def test_401_refetches_token_and_retries_once_then_raises(self) -> None:
+        token_route = respx.post(f"{BASE_URL}/oauth/token").mock(
+            side_effect=[_token_response("tok-1"), _token_response("tok-2")]
+        )
+        resource_route = respx.get(f"{BASE_URL}/jsonapi/node/article").mock(
+            return_value=httpx.Response(401, json={"errors": []})
+        )
+        async with AsyncJsonApiClient(
+            BASE_URL,
+            authentication=OAuthAuth(client_id="id", client_secret="secret"),
+        ) as client:
+            with pytest.raises(httpx.HTTPStatusError) as exc_info:
+                await client.get_collection("node--article", raise_for_status=True)
+
+        assert exc_info.value.response.status_code == 401
+        assert token_route.call_count == 2
+        sent = [call.request.headers["authorization"] for call in resource_route.calls]
+        assert sent == ["Bearer tok-1", "Bearer tok-2"]
+
+    @pytest.mark.parametrize("scope", ["content_editor", None])
+    @respx.mock
+    async def test_scope_sent_in_token_request_only_when_set(
+        self, scope: str | None
+    ) -> None:
+        token_route = respx.post(f"{BASE_URL}/oauth/token").mock(
+            return_value=_token_response("tok")
+        )
+        respx.get(f"{BASE_URL}/jsonapi/node/article").mock(
+            return_value=httpx.Response(200, json={"data": []})
+        )
+        async with AsyncJsonApiClient(
+            BASE_URL,
+            authentication=OAuthAuth(
+                client_id="id", client_secret="secret", scope=scope
+            ),
+        ) as client:
+            await client.get_collection("node--article")
+
+        body = parse_qs(token_route.calls.last.request.content.decode())
+        if scope is None:
+            assert "scope" not in body
+        else:
+            assert body["scope"] == [scope]
 
 
 # -- AsyncDecoupledRouterClient --------------------------------------------
